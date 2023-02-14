@@ -1,5 +1,36 @@
+const { userModel } = require("../model/userModel");
+
 const userCheck = (req, res, next) => {
-    if (req.body.isMan && req.body.username && req.body.password && req.body.photoUrl && req.body.locations && req.body.email) return next()
-    else res.send("Error: Incompleted")
-}
-module.exports = { userCheck }
+  if (
+    req.body.isMan &&
+    req.body.username &&
+    req.body.password &&
+    req.body.photoUrl &&
+    req.body.locations &&
+    req.body.email
+  )
+    return next();
+  else res.send("Error: Incompleted");
+};
+
+const loginMiddleware = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await userModel.findOne({ email: email });
+
+  if (user) {
+    if (user.email !== null && user.password !== null) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (isMatch) {
+        next();
+      } else {
+        res.status(401).json({ message: "Invalid password" });
+      }
+    } else {
+      res.status(401).json({ message: "Empty password or email" });
+    }
+  } else {
+    res.status(401).json({ message: "User not found" });
+  }
+};
+module.exports = { userCheck, loginMiddleware };

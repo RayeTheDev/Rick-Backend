@@ -18,7 +18,7 @@ const User = new Schema({
     articles: {
         type:Array,
         default:null,
-        required:false
+        required: true
     },
 
 })

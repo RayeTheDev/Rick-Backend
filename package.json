@@ -6,7 +6,7 @@
   "author": "TemuugenTaleyTimmy <nesthoptemuugen@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js",
     "dev": "nodemon index.js"
   },
   "dependencies": {

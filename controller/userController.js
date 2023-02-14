@@ -25,7 +25,22 @@ const createUser = async (req, res) => {
         res.send(error)
     }
 }
+const loginUser = async (req, res) => {
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email: email });
+    try {
+      const accessToken = jwt.sign(
+        { email: user.email, password: user.password, role: user.roles },
+        process.env.ACCESS_TOKEN_SECRET,
+        { expiresIn: "1d" }
+      );
+      res.json({ accessToken: accessToken });
+    } catch (err) {
+      res.send(err);
+    }
+  };
+  
 const deleteAllUser = async (req, res) => {
     res.send(await userModel.deleteMany());
 }
-module.exports = { createUser,deleteAllUser }
+module.exports = { createUser,deleteAllUser, loginUser }
