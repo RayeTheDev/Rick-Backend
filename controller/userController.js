@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const { userModel } = require("../model/userModel");
-const {jwt} = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 
 const createUser = async (req, res) => {
   const confirm = await userModel.find({ email: req.body.email });
@@ -32,7 +32,8 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await userModel.findOne({ email: email });
-  console.log(user)
+
+
   try {
     const accessToken = jwt.sign(
       { email: user.email, password: user.password, username: {first: user.username.first, last: user.username.last} },
@@ -46,7 +47,26 @@ const loginUser = async (req, res) => {
   }
 };
 
+const authenticateToken = (req, res) => {
+
+    const token = req.headers.authorization
+    console.log(token, "authenticateToken");
+
+    if (token == null) return res.sendStatus(401);
+  
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, async (err, result) => {
+      if (err) {
+        res.send(err);
+      } else {
+        const email = result.email;
+        const user = await userModel.findOne({ email: email });
+        res.send(user);
+      }
+    });
+  };
+  
+
 const deleteAllUser = async (req, res) => {
   res.send(await userModel.deleteMany());
 };
-module.exports = { createUser, deleteAllUser, loginUser };
+module.exports = { createUser, deleteAllUser, loginUser, authenticateToken };
