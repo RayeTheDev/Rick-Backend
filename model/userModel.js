@@ -1,11 +1,6 @@
-const { Schema, model } = require("mongoose")
+const { Schema, model, Types } = require("mongoose")
 
 const User = new Schema({
-    isAdmin: {
-        type: Boolean,
-        default: false,
-        required: true
-    },
     isMan: Boolean,
     username: {
         first: String,
@@ -15,11 +10,13 @@ const User = new Schema({
     photoUrl: String,
     locations: String,
     email: String,
-    articles: {
-        type:Array,
-        default:null,
-        required: true
-    },
+    roles: { type: Object, default: { "User": 200 } },
+    articles: [{
+        type: Schema.Types.ObjectId,
+        default: null,
+        required: true,
+        ref: "Article"
+    }],
 
 })
 const userModel = model("User", User)
