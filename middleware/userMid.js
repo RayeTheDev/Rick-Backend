@@ -22,7 +22,6 @@ const loginMiddleware = async (req, res, next) => {
     if (user.email !== null && user.password !== null) {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        console.log('hi')
         next();
       } else {
         res.status(401).json({ message: "Invalid password" });

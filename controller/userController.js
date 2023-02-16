@@ -1,12 +1,13 @@
 const bcrypt = require("bcrypt");
 const { userModel } = require("../model/userModel");
 const jwt = require("jsonwebtoken");
-
+const { sendValidation } = require("../confirmationEmail");
+const { tokenSend, validToken } = require("./token");
 
 const getUsers = async (req, res) => {
-  const result = await userModel.find({})
-  res.send(result)
-}
+  const result = await userModel.find({});
+  res.send(result);
+};
 const createUser = async (req, res) => {
   const confirm = await userModel.find({ email: req.body.email });
   if (confirm.length != 0) {
@@ -38,23 +39,38 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await userModel.findOne({ email: email });
 
+  try {
+    if (user) {
+      const token = validToken({ _id: user._id, email: user.email });
+
+      tokenSend({email: user.email, password: user.password,username: {first:user.username.first, last:user.username.last}});
+
+      res.json({ accessToken: accessToken });
+    }
+  } catch (err) {
+    res.send(err);
+  }
+};
+const isValidUser = async (req, res) => {
+  const accessToken = req.body.token;
 
   try {
-    const accessToken = jwt.sign(
-      { email: user.email, password: user.password, username: { first: user.username.first, last: user.username.last } },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "2m" }
-    );
-
-    res.json({ accessToken: accessToken });
+    if (accessToken) {
+      jwt.verify(accessToken, async function (err, response) {
+        if (err) return res.send(err);
+        let user = await userModel.findById(accessToken._id);
+        user.isVerify = true;
+        await userModel.findByIdAndUpdate(accessToken._id, user);
+        res.send("Verified access token");
+      });
+    }
   } catch (err) {
     res.send(err);
   }
 };
 
 const authenticateToken = (req, res) => {
-
-  const token = req.headers.authorization
+  const token = req.headers.authorization;
   console.log(token, "authenticateToken");
 
   if (token == null) return res.sendStatus(401);
@@ -70,8 +86,14 @@ const authenticateToken = (req, res) => {
   });
 };
 
-
 const deleteAllUser = async (req, res) => {
   res.send(await userModel.deleteMany());
 };
-module.exports = { createUser, getUsers, deleteAllUser, loginUser, authenticateToken };
+module.exports = {
+  createUser,
+  getUsers,
+  deleteAllUser,
+  loginUser,
+  authenticateToken,
+  isValidUser,
+};
