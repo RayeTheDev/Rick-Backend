@@ -2,12 +2,12 @@ const jwt = require("jsonwebtoken");
 
 exports.roleMiddleware = (...allowedRoles) => {
     return (req, res, next) => {
-
         const token = req.headers.authorization ?? null;
+        console.log(token)
         if (!token) return res.send("Authorization token is required");
 
         try {
-            const payload = jwt.verify(token, process.env.JWT_SECRET);
+            const payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
 
             if (!payload) return res.send("Unauthorized");
 

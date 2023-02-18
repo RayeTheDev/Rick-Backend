@@ -19,7 +19,7 @@ const User = new Schema({
       ref: "Article",
     },
   ],
-  isVerify: { type: Boolean, required: true, default: false },
+  isVerified: { type: Boolean, required: true, default: false },
 });
 const userModel = model("User", User);
 module.exports = { userModel };

@@ -4,9 +4,10 @@ const express = require("express"),
   cors = require("cors"),
   { connect } = require("./config/db");
 const { articleRouter } = require("./routes/articleRoutes");
+const { commentRouter } = require("./routes/commentRoutes");
 require("dotenv").config();
 const { userRouter } = require("./routes/userRoutes");
-const app = express().use(cors(), express.json(), userRouter, articleRouter),
+const app = express().use(cors(), express.json(), userRouter, articleRouter, commentRouter),
   port = process.env.PORT || 8080;
 
 app.listen(port, () => {

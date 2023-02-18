@@ -8,6 +8,7 @@ const getUsers = async (req, res) => {
   const result = await userModel.find({});
   res.send(result);
 };
+
 const createUser = async (req, res) => {
   const confirm = await userModel.find({ email: req.body.email });
   if (confirm.length != 0) {
@@ -25,6 +26,7 @@ const createUser = async (req, res) => {
       photoUrl: req.body.photoUrl,
       locations: req.body.locations,
       articles: req.body.articles,
+      roles: req.body.roles,
     };
     console.log(hash);
     await new userModel(newUser).save();
@@ -35,6 +37,7 @@ const createUser = async (req, res) => {
     res.send(error);
   }
 };
+
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await userModel.findOne({ email: email });
@@ -42,27 +45,40 @@ const loginUser = async (req, res) => {
   try {
     if (user) {
       const token = validToken({ _id: user._id, email: user.email });
+      console.log(token);
 
-      tokenSend({email: user.email, password: user.password,username: {first:user.username.first, last:user.username.last}});
+      const accessToken = tokenSend({
+        email: user.email,
+        password: user.password,
+        roles: user.roles,
+        username: { first: user.username.first, last: user.username.last },
+      });
 
-      res.json({ accessToken: accessToken });
+      res.json({ accessToken: token });
     }
   } catch (err) {
     res.send(err);
   }
 };
+
 const isValidUser = async (req, res) => {
-  const accessToken = req.body.token;
+  const accessToken = req.headers.authorization;
 
   try {
     if (accessToken) {
-      jwt.verify(accessToken, async function (err, response) {
+      jwt.verify(accessToken, "defaultSecure", async function (err, response) {
+        console.log("jaj", response, req.body.token);
         if (err) return res.send(err);
-        let user = await userModel.findById(accessToken._id);
-        user.isVerify = true;
-        await userModel.findByIdAndUpdate(accessToken._id, user);
-        res.send("Verified access token");
+       const isMatched = bcrypt.compareSync(req.body.token,response.token )
+      if(isMatched) {
+        let user = await userModel.findById(response._id);
+        user.isVerified = true;
+        await userModel.findByIdAndUpdate(response._id, user);
+        return res.send("Verified access token");
+      }
       });
+     
+
     }
   } catch (err) {
     res.send(err);
