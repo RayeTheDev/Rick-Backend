@@ -7,25 +7,25 @@ const sendValidation = async (props) => {
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "unread.develop@gmail.com",
-        pass: "ivapkqvcbdbetqve",
+        user: process.env.GMAIL,
+        pass: process.env.GMAIL_PASSWORD,
       },
     });
 
     const handlebarOptions = {
       viewEngine: {
         extname: ".html",
-        partialsDir: path.resolve("./views"),
+        partialsDir: path.resolve("../views"),
         defaultLayout: false,
       },
-      viewPath: path.resolve("./views"),
+      viewPath: path.resolve("../views"),
       extName: ".handlebars",
     };
 
     transporter.use("compile", hbs(handlebarOptions));
 
     var mailOptions = {
-      from: "unread.develop@gmail.com",
+      from: process.env.GMAIL,
       to: props.email,
       template: "index",
       context: {
@@ -39,6 +39,6 @@ const sendValidation = async (props) => {
         console.log("Email sent: " + info.response);
       }
     });
-  } catch (error) {}
+  } catch (error) { }
 };
 exports.sendValidation = sendValidation;

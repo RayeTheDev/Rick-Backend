@@ -1,4 +1,4 @@
-const { sendValidation } = require("../confirmationEmail");
+const { sendValidation } = require("../functions/confirmationEmail");
 
 exports.tokenSend = (props) => {
   const jwt = require("jsonwebtoken");

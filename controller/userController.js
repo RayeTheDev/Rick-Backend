@@ -1,7 +1,6 @@
 const bcrypt = require("bcrypt");
 const { userModel } = require("../model/userModel");
 const jwt = require("jsonwebtoken");
-const { sendValidation } = require("../confirmationEmail");
 const { tokenSend, validToken } = require("./token");
 
 const getUsers = async (req, res) => {
