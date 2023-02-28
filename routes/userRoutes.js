@@ -5,7 +5,7 @@ const { userCheck, loginMiddleware } = require("../middleware/userMid");
 const router = express.Router()
 
 router
-    .get("/users", roleMiddleware(401), getUsers)
+    .get("/users", getUsers)
     .get("/check", isValidUser)
     .post("/user", userCheck, createUser)
     .post("/login", loginMiddleware, loginUser)

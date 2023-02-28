@@ -10,11 +10,12 @@ const User = new Schema({
   photoUrl: String,
   locations: String,
   email: String,
+
+
   roles: { type: Object, default: { User: 200 } },
   articles: [
     {
       type: Schema.Types.ObjectId,
-      default: null,
       required: true,
       ref: "Article",
     },
