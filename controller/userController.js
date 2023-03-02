@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const { userModel } = require("../model/userModel");
 const jwt = require("jsonwebtoken");
 const { tokenSend, validToken } = require("./token");
+const { request } = require("express");
 
 const getUsers = async (req, res) => {
   const result = await userModel.find({});
@@ -74,10 +75,12 @@ const isValidUser = async (req, res) => {
         user.isVerified = true;
         await userModel.findByIdAndUpdate(response._id, user);
         return res.send("Verified access token");
+      } else {
+        res.send('Wrong verification code')
       }
       });
-     
-
+    } else {
+      res.send('No access token found')
     }
   } catch (err) {
     res.send(err);

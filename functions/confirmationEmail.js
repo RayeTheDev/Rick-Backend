@@ -27,6 +27,8 @@ const sendValidation = async (props) => {
     var mailOptions = {
       from: process.env.GMAIL,
       to: props.email,
+      subject: 'Unread email confirmation',
+      preheader: `Hi ${props.email}! Your email confirmation has been sent to you.`,
       template: "index",
       context: {
         num: props.token,
