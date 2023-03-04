@@ -3,7 +3,7 @@ const { Schema, Types, model, SchemaType } = require("mongoose")
 const Article = new Schema({
     title: { type: String, required: true },
     texts: {
-        type: Object, required: true
+        type: String, required: true
     },
     category: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     createdAt: { type: Date, default: Date.now() },
