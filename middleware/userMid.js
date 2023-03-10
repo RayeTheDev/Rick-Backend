@@ -15,7 +15,7 @@ const userCheck = (req, res, next) => {
 
 const loginMiddleware = async (req, res, next) => {
   const { email, password } = req.body;
-
+  
   const user = await userModel.findOne({ email: email });
 
   if (user) {

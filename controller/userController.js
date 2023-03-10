@@ -40,7 +40,7 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await userModel.findOne({ email: email });
-
+  console.log(user)
   try {
     if (user) {
       const token = validToken({ _id: user._id, email: user.email });
@@ -68,15 +68,15 @@ const isValidUser = async (req, res) => {
       jwt.verify(accessToken, "defaultSecure", async function (err, response) {
         console.log("jaj", response, req.body.token);
         if (err) return res.send(err);
-       const isMatched = bcrypt.compareSync(req.body.token,response.token )
-      if(isMatched) {
-        let user = await userModel.findById(response._id);
-        user.isVerified = true;
-        await userModel.findByIdAndUpdate(response._id, user);
-        return res.send("Verified access token");
-      }
+        const isMatched = bcrypt.compareSync(req.body.token, response.token)
+        if (isMatched) {
+          let user = await userModel.findById(response._id);
+          user.isVerified = true;
+          await userModel.findByIdAndUpdate(response._id, user);
+          return res.send("Verified access token");
+        }
       });
-     
+
 
     }
   } catch (err) {
