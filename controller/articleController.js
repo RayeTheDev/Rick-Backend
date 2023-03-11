@@ -13,7 +13,9 @@ exports.createArticle = async (req, res) => {
     const body = req.body;
     const result = await new ArticleModel(body).save();
     res.send(result);
-  } catch (error) {}
+  } catch (error) {
+    res.send("Null data")
+  }
 };
 
 exports.deleteAllArticles = async (req, res) => {
