@@ -6,6 +6,7 @@ exports.tokenSend = (props) => {
     {
       email: props.email,
       password: props.password,
+      isVerified: props.isVerified,
       username: { first: props.username.first, last: props.username.last },
       roles: props.roles,
     },

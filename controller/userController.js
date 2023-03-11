@@ -10,10 +10,7 @@ const getUsers = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  const confirm = await userModel.find({ email: req.body.email });
-  if (confirm.length != 0) {
-    return res.send("This account already used");
-  }
+
   try {
     const salt = bcrypt.genSaltSync(1);
     const hash = bcrypt.hashSync(String(req.body.password), salt);
@@ -25,17 +22,17 @@ const createUser = async (req, res) => {
       gender: req.body.gender,
       roles: req.body.roles,
     };
-    console.log(hash);
+
     await new userModel(newUser).save();
     if (newUser.gender === "male") {
-      res.send(`Welcome, mr ${newUser.username.first}`);
+      return res.send(`Welcome, mr ${newUser.username.first}`);  
     } else if (newUser.gender === "female") {
-      res.send(`Welcome, mr ${newUser.username.first}`);
+      return res.send(`Welcome, mrs ${newUser.username.first}`);
     } else if (newUser.gender === "other") {
-      res.send(`Welcome, ${newUser.username.first}`);
+      return res.send(`Welcome, ${newUser.username.first}`);
     }
   } catch (error) {
-    res.send(error);
+    return res.status(400).json(error);
   }
 };
 
@@ -52,10 +49,11 @@ const loginUser = async (req, res) => {
         email: user.email,
         password: user.password,
         roles: user.roles,
+        isVerified: user.isVerified,
         username: { first: user.username.first, last: user.username.last },
       });
 
-      res.json({ accessToken: token });
+      res.json({ confirmationToken: token, userToken: accessToken });
     }
   } catch (err) {
     res.send(err);
