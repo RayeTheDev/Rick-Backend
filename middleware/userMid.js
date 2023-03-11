@@ -2,15 +2,13 @@ const { userModel } = require("../model/userModel");
 const bcrypt = require("bcrypt");
 const userCheck = (req, res, next) => {
   if (
-    req.body.isMan &&
+    req.body.gender &&
     req.body.username &&
     req.body.password &&
-    req.body.photoUrl &&
-    req.body.locations &&
     req.body.email
   )
     return next();
-  else res.send("Error: Incompleted");
+  else res.status(404).json("Error: Incompleted");
 };
 
 const loginMiddleware = async (req, res, next) => {

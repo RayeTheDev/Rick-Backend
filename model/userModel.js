@@ -1,7 +1,7 @@
 const { Schema, model, Types } = require("mongoose");
 
 const User = new Schema({
-  isMan: Boolean,
+  gender: String,
   username: {
     first: String,
     last: String,
@@ -20,7 +20,7 @@ const User = new Schema({
       ref: "Article",
     },
   ],
-  isVerified: { type: Boolean, required: true, default: false },
+  isVerified: { type: Boolean, default: false },
 });
 const userModel = model("User", User);
 module.exports = { userModel };

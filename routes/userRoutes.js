@@ -5,8 +5,8 @@ const { userCheck, loginMiddleware } = require("../middleware/userMid");
 const router = express.Router()
 
 router
-    .get("/users", getUsers)
-    .get("/check", isValidUser)
+    .get("/users", roleMiddleware(404), getUsers)
+    .post("/check", isValidUser)
     .post("/user", userCheck, createUser)
     .post("/login", loginMiddleware, loginUser)
     .get("/token", authenticateToken)

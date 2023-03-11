@@ -22,17 +22,18 @@ const createUser = async (req, res) => {
       email: req.body.email,
       password: hash,
       isAdmin: req.body.isAdmin,
-      isMan: req.body.isMan,
-      photoUrl: req.body.photoUrl,
-      locations: req.body.locations,
-      articles: req.body.articles,
+      gender: req.body.gender,
       roles: req.body.roles,
     };
     console.log(hash);
     await new userModel(newUser).save();
-    res.send(
-      `Welcome, ${newUser.isMan ? "sir" : "msr"} ${newUser.username.first}`
-    );
+    if (newUser.gender === "male") {
+      res.send(`Welcome, mr ${newUser.username.first}`);
+    } else if (newUser.gender === "female") {
+      res.send(`Welcome, mr ${newUser.username.first}`);
+    } else if (newUser.gender === "other") {
+      res.send(`Welcome, ${newUser.username.first}`);
+    }
   } catch (error) {
     res.send(error);
   }
@@ -63,24 +64,24 @@ const loginUser = async (req, res) => {
 
 const isValidUser = async (req, res) => {
   const accessToken = req.headers.authorization;
-
+  console.log(req.headers, "headers");
   try {
     if (accessToken) {
       jwt.verify(accessToken, "defaultSecure", async function (err, response) {
         console.log("jaj", response, req.body.token);
         if (err) return res.send(err);
-       const isMatched = bcrypt.compareSync(req.body.token,response.token )
-      if(isMatched) {
-        let user = await userModel.findById(response._id);
-        user.isVerified = true;
-        await userModel.findByIdAndUpdate(response._id, user);
-        return res.send("Verified access token");
-      } else {
-        res.send('Wrong verification code')
-      }
+        const isMatched = bcrypt.compareSync(req.body.token, response.token);
+        if (isMatched) {
+          let user = await userModel.findById(response._id);
+          user.isVerified = true;
+          await userModel.findByIdAndUpdate(response._id, user);
+          return res.send("Verified access token");
+        } else {
+          res.status(404).send("Wrong verification code");
+        }
       });
     } else {
-      res.send('No access token found')
+      res.status(404).send("No access token found");
     }
   } catch (err) {
     res.send(err);
