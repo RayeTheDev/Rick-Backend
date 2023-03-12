@@ -15,10 +15,10 @@ const sendValidation = async (props) => {
     const handlebarOptions = {
       viewEngine: {
         extname: ".html",
-        partialsDir: path.resolve("../views"),
+        partialsDir: path.resolve('./views'),
         defaultLayout: false,
       },
-      viewPath: path.resolve("../views"),
+      viewPath: path.resolve('./views'),
       extName: ".handlebars",
     };
 
@@ -27,6 +27,8 @@ const sendValidation = async (props) => {
     var mailOptions = {
       from: process.env.GMAIL,
       to: props.email,
+      subject: 'Unread email confirmation',
+      preheader: `Hi ${props.email}! Your email confirmation has been sent to you.`,
       template: "index",
       context: {
         num: props.token,

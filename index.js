@@ -3,8 +3,9 @@ require("dotenv").config();
 const express = require("express"), cors = require("cors"), { connect } = require("./config/db");
 
 const { articleRouter } = require("./routes/articleRoutes"), { commentRouter } = require("./routes/commentRoutes"), { userRouter } = require("./routes/userRoutes");
+const { categoryRouter } = require("./routes/categoryRoutes");
 
-const app = express().use(cors(), express.json(), userRouter, articleRouter, commentRouter),
+const app = express().use(cors(), express.json(), userRouter, articleRouter, commentRouter, categoryRouter),
   port = process.env.PORT || 8080;
 
 app.get("/", cors(), (req, res) => {
