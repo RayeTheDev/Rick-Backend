@@ -4,6 +4,10 @@ exports.getComments = async (req, res) => {
     const result = await CommentModel.find({})
     res.send(result)
 }
+exports.getComment = async (req, res) => {
+    const result = await CommentModel.find({})
+    res.send(result)
+}
 exports.createComment = async (req, res) => {
     const body = req.body
     const result = await new CommentModel(body).save()

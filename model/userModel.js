@@ -22,15 +22,7 @@ const User = new Schema({
     unique: true,
     validate: [isEmail, "Please enter a valid email"],
   },
-
   roles: { type: Object, default: { User: 200 } },
-  articles: [
-    {
-      type: Schema.Types.ObjectId,
-      required: true,
-      ref: "Article",
-    },
-  ],
   isVerified: { type: Boolean, default: false },
 });
 const userModel = model("User", User);

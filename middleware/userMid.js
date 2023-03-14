@@ -16,13 +16,19 @@ const handleErrors = (err) => {
 const userCheck = async (req, res, next) => {
   const isAlready = await userModel.findOne({ email: req.body.email });
   console.log(isAlready);
-  if (!req.body.username.first) {
-    res.status(401).json("First name is required");
+  if (req.body.username) {
+    if (!req.body.username.first) {
+      res.status(401).json("First name is required");
+      return;
+    } else if (!req.body.username.last) {
+      res.status(401).json("Last name is required");
+      return;
+    }
+  }else{
+    res.status(401).json("Name is required");
     return;
-  } else if (!req.body.username.last) {
-    res.status(401).json("Last name is required");
-    return;
-  } else if (!req.body.email) {
+  }
+  if (!req.body.email) {
     res.status(401).json("Email is required");
     return;
   } else if (!req.body.password) {
@@ -34,17 +40,17 @@ const userCheck = async (req, res, next) => {
   } else if (req.body.password.length <= 5) {
     res.status(401).json("Minimum password length is 6");
     return
-  }   
+  }
 
   try {
-    if (isAlready  ) {
+    if (isAlready) {
       res.status(400).send("That email is already registered");
       return;
     }
 
     next();
   } catch (err) {
-   
+
     const errors = handleErrors(err);
     res.status(401).json({ errors });
   }

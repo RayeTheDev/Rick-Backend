@@ -8,6 +8,10 @@ const getUsers = async (req, res) => {
   const result = await userModel.find({});
   res.send(result);
 };
+const getUser = async (req, res) => {
+  const result = await userModel.findById(req.params.id);
+  res.send(result);
+};
 
 const createUser = async (req, res) => {
 
@@ -104,6 +108,10 @@ const authenticateToken = (req, res) => {
   });
 };
 
+
+const updateUser = async (req, res) => {
+  res.send(await userModel.findByIdAndUpdate(req.params.id,req.body))
+};
 const deleteAllUser = async (req, res) => {
   res.send(await userModel.deleteMany());
 };
@@ -114,4 +122,6 @@ module.exports = {
   loginUser,
   authenticateToken,
   isValidUser,
+  getUser,
+  updateUser
 };
