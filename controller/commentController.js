@@ -9,8 +9,12 @@ exports.getComment = async (req, res) => {
     res.send(result)
 }
 exports.createComment = async (req, res) => {
-    const body = req.body
-    const result = await new CommentModel(body).save()
+    const info={
+        name:req.body.name?req.body.name:"Зочин",
+        texts:req.body.texts,
+        article:req.body.article
+    }
+    const result = await new CommentModel(info).save()
     res.send(result)
 }
 
