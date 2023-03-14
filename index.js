@@ -8,7 +8,7 @@ const { articleRouter } = require("./routes/articleRoutes"), { commentRouter } =
 const { categoryRouter } = require("./routes/categoryRoutes");
 
 const app = express().use(cors(), express.json(), userRouter, articleRouter, commentRouter, categoryRouter),
-  port = process.env.PORT || 8080;
+  port = process.env.PORT || 3100;
 
 app.get("/", (req, res) => {
   res.send(
