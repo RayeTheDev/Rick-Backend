@@ -57,7 +57,7 @@ const loginUser = async (req, res) => {
         username: { first: user.username.first, last: user.username.last },
       });
 
-      res.json({ confirmationToken: token, userToken: accessToken });
+      res.json({ confirmationToken: token, userToken: accessToken, userId:user._id });
     }
   } catch (err) {
     res.send(err);
