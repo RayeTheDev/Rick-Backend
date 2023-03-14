@@ -6,6 +6,7 @@ exports.tokenSend = (props) => {
     {
       email: props.email,
       password: props.password,
+      isVerified: props.isVerified,
       username: { first: props.username.first, last: props.username.last },
       roles: props.roles,
     },
@@ -38,7 +39,7 @@ exports.validToken = (props) => {
       token: hashedToken,
     },
     "defaultSecure",
-    { expiresIn: "3m" }
+    { expiresIn: "5m" }
   );
   sendValidation({ email: props.email, token: customId });
   return validTokenId;
