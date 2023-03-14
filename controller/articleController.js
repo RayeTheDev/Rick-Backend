@@ -1,11 +1,14 @@
 const { ArticleModel } = require("../model/articleModel");
+const { CommentModel } = require("../model/commentModel");
 
 
 exports.getArticle = async (req, res) => {
   try {
     const article = await ArticleModel.findById(req.params.id);
     const result=await ArticleModel.findByIdAndUpdate(req.params.id,{views:article.views+1}).populate("category");
-    res.send(result);
+    const comment=await CommentModel.find({article:req.params.id})
+
+    res.send({result:result,comment:comment});
   } catch (error) {
     res.send(error);
   }
