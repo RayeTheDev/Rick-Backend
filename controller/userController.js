@@ -29,7 +29,7 @@ const createUser = async (req, res) => {
 
     await new userModel(newUser).save();
     if (newUser.gender === "male") {
-      return res.send(`Welcome, mr ${newUser.username.first}`);  
+      return res.send(`Welcome, mr ${newUser.username.first}`);
     } else if (newUser.gender === "female") {
       return res.send(`Welcome, mrs ${newUser.username.first}`);
     } else if (newUser.gender === "other") {
@@ -43,12 +43,9 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await userModel.findOne({ email: email });
-
+  console.log(user)
   try {
     if (user) {
-      const token = validToken({ _id: user._id, email: user.email });
-      console.log(token);
-
       const accessToken = tokenSend({
         email: user.email,
         password: user.password,
@@ -56,8 +53,12 @@ const loginUser = async (req, res) => {
         isVerified: user.isVerified,
         username: { first: user.username.first, last: user.username.last },
       });
+      if (user.isVerified) {
+        return res.json({ userToken: accessToken });
+      }
+      const token = validToken({ _id: user._id, email: user.email });
+      return res.json({ confirmationToken: token, userToken: accessToken });
 
-      res.json({ confirmationToken: token, userToken: accessToken });
     }
   } catch (err) {
     res.send(err);
