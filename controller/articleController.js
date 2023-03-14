@@ -11,7 +11,7 @@ exports.getArticle = async (req, res) => {
 };
 exports.getArticles = async (req, res) => {
   try {
-    const article = await ArticleModel.find({});
+    const article = await ArticleModel.find({}).populate("category");
     res.send(article);
   } catch (error) {
     res.send(error);
