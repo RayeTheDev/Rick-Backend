@@ -4,7 +4,8 @@ const { ArticleModel } = require("../model/articleModel");
 exports.getArticle = async (req, res) => {
   try {
     const article = await ArticleModel.findById(req.params.id);
-    res.send(article);
+    const result=await ArticleModel.findByIdAndUpdate(req.params.id,{views:article.views+1}).populate("category");
+    res.send(result);
   } catch (error) {
     res.send(error);
   }

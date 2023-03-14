@@ -8,7 +8,7 @@ const Article = new Schema({
     category: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     createdAt: { type: Date, default: Date.now() },
     photoUrl: String,
-    vievws: Number,
+    views: Number,
     comment: [{ type: Schema.Types.ObjectId, ref: 'Comment' }],
     creatorId: Schema.Types.ObjectId
 
